@@ -35,3 +35,25 @@ def calculate_engagement_rate(df: pd.DataFrame) -> pd.DataFrame:
     df_clean["engagement_rate"] = df_clean["engagement_rate"].fillna(0)
 
     return df_clean
+
+
+def compute_days_since_published(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calcula la antigüedad del video en días desde el video más antiguo del dataset.
+
+    Args:
+        df: DataFrame con la columna 'publishTime' en formato ISO 8601.
+
+    Returns:
+        DataFrame con la columna 'days_since_published' agregada.
+    """
+    df_clean = df.copy()
+
+    # 1. Aseguramos que sea datetime
+    df_clean["publishTime"] = pd.to_datetime(df_clean["publishTime"], errors="coerce")
+
+    # 2. Calculamos days_since_published
+    min_date = df_clean["publishTime"].min()
+    df_clean["days_since_published"] = (df_clean["publishTime"] - min_date).dt.days
+
+    return df_clean
