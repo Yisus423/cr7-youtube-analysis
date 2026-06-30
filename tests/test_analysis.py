@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 from src.analysis.shorts_vs_longs import analyze_engagement_by_type
+from src.analysis.hype_decay import calculate_correlations
 
 
 def test_analyze_engagement_by_type():
@@ -27,3 +28,28 @@ def test_analyze_engagement_by_type():
     assert shorts["mean_engagement"] == pytest.approx(0.15)  # (0.10 + 0.20) / 2
     assert longs["mean_engagement"] == pytest.approx(0.05)
     assert shorts["video_count"] == pytest.approx(2)
+
+
+def test_calculate_correlations_perfect_negative():
+    # 1. Arrange: Datos con correlación negativa perfecta
+    mock_data = pd.DataFrame(
+        {
+            "days_since_published": [0, 1, 2],
+            "viewCount": [100, 50, 0],
+            "engagement_rate": [0.3, 0.2, 0.1],
+        }
+    )
+
+    # 2. Act
+    result = calculate_correlations(mock_data)
+
+    # 3. Assert
+    # Filtramos para obtener el valor de correlación para viewCount
+    corr_views = result[result["metric"] == "viewCount"]["pearson_correlation"].iloc[0]
+    corr_eng = result[result["metric"] == "engagement_rate"][
+        "pearson_correlation"
+    ].iloc[0]
+
+    # Pearson de [100, 50, 0] vs [0, 1, 2] es -1.0
+    assert corr_views == pytest.approx(-1.0)
+    assert corr_eng == pytest.approx(-1.0)
