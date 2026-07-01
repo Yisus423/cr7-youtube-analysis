@@ -6,6 +6,32 @@ from src.analysis.hype_decay import calculate_correlations
 from src.analysis.sweet_spot import analyze_duration_segments
 
 
+def render_metric_selector(
+    label: str, options: dict[str, str], key: str, default_index: int = 0
+) -> str:
+    """
+    Renderiza un componente de selección (selectbox) de Streamlit.
+
+    Este helper encapsula la lógica de renderizado para evitar la repetición
+    de código (DRY) al permitir mapear etiquetas legibles por el usuario
+    hacia claves técnicas necesarias para el análisis.
+
+    Args:
+        label (str): Texto de encabezado que verá el usuario.
+        options (dict[str, str]): Diccionario donde la llave es la etiqueta
+            mostrada al usuario y el valor es la columna técnica.
+        key (str): Identificador único para el widget en Streamlit.
+        default_index (int, optional): Índice de la opción seleccionada
+            por defecto. Defaults a 0.
+    Returns:
+        str: El valor técnico seleccionado correspondiente a la etiqueta elegida.
+    """
+    selected_label = st.selectbox(
+        label, options=list(options.keys()), key=key, index=default_index
+    )
+    return options[selected_label]
+
+
 def render_hypothesis_1(df: pd.DataFrame):
     # Análisis Hipótesis 1: Shorts vs Longs
     st.header("1. ¿Shorts o Videos Largos?")
@@ -27,14 +53,9 @@ def render_hypothesis_1(df: pd.DataFrame):
     }
 
     # Selector:
-    selected_label = st.selectbox(
-        "Selecciona la métrica de Engagement:",
-        options=list(METRICS_MAP.keys()),
-        index=0,  # El primer elemento de la lista (Mediana)
+    selected_column = render_metric_selector(
+        "Selecciona la métrica de Engagement:", METRICS_MAP, key="h1_metrics"
     )
-
-    # Obtenemos el nombre técnico real para graficar
-    selected_column = METRICS_MAP[selected_label]
 
     # Gráfico dinámico
     st.bar_chart(data=summary_h1, x="video_type", y=selected_column)
