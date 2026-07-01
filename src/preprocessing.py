@@ -2,6 +2,17 @@ import pandas as pd
 import numpy as np
 
 
+def run_preprocessing_pipeline(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Orquesta el pipeline completo de preprocesamiento usando el método .pipe()
+    """
+    return (
+        df.pipe(calculate_engagement_rate)
+        .pipe(compute_days_since_published)
+        .pipe(add_log_features)
+    )
+
+
 def calculate_engagement_rate(df: pd.DataFrame) -> pd.DataFrame:
     """
     Calcula la columna engagement_rate: (likeCount + commentCount) / viewCount

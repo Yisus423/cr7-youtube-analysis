@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from src.preprocessing import calculate_engagement_rate, compute_days_since_published
+from src.preprocessing import run_preprocessing_pipeline
 from src.analysis.shorts_vs_longs import analyze_engagement_by_type
 from src.analysis.hype_decay import calculate_correlations
 
@@ -57,8 +57,7 @@ def main():
     # 1. Carga y preprocesamiento (esto se ejecuta cada vez que se recarga la app)
     # En un entorno profesional, aquí se usaría st.cache_data para no re-procesar todo
     df = pd.read_csv("data/cristiano_youtube_stats.csv")
-    df = calculate_engagement_rate(df)
-    df = compute_days_since_published(df)
+    df = run_preprocessing_pipeline(df)
     # 2.Cargamos las hipothesis:
     render_hypothesis_1(df)
     render_hypothesis_2(df)
