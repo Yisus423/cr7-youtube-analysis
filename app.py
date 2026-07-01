@@ -6,11 +6,37 @@ from src.analysis.hype_decay import calculate_correlations
 
 
 def render_hypothesis_1(df: pd.DataFrame):
-    # 2. Análisis Hipótesis 1: Shorts vs Longs
+    # Análisis Hipótesis 1: Shorts vs Longs
     st.header("1. ¿Shorts o Videos Largos?")
+
+    # Obtenemos los datos (asumiendo que ya tienes el df preprocesado)
     summary_h1 = analyze_engagement_by_type(df)
     st.dataframe(summary_h1)
-    st.bar_chart(data=summary_h1, x="video_type", y="mean_engagement")
+
+    # Mostramos el subheader
+    st.subheader("Análisis por tipo de video: ")
+
+    # Definimos un diccionario de mapeo (User Friendly Name -> Columna técnica)
+    METRICS_MAP = {
+        "Mediana (Recomendado)": "median_engagement",
+        "Promedio (Mean)": "mean_engagement",
+        "Desviación (std)": "std_engagement",
+        "Promedio de vistas (extra)": "mean_views",
+        "Número de videos (extra)": "video_count",
+    }
+
+    # Selector:
+    selected_label = st.selectbox(
+        "Selecciona la métrica de Engagement:",
+        options=list(METRICS_MAP.keys()),
+        index=0,  # El primer elemento de la lista (Mediana)
+    )
+
+    # Obtenemos el nombre técnico real para graficar
+    selected_column = METRICS_MAP[selected_label]
+
+    # Gráfico dinámico
+    st.bar_chart(data=summary_h1, x="video_type", y=selected_column)
 
 
 def render_hypothesis_2(df: pd.DataFrame):
