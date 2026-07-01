@@ -67,24 +67,47 @@ def render_hypothesis_2(df: pd.DataFrame):
     summary_h2 = calculate_correlations(df)
     st.table(summary_h2)  # Tabla para ver coeficientes
 
+    # Creamos el diccionario de mapeo
+    METRICS_MAP = {
+        "Vistas (log)": "log_viewCount",
+        "Engagement": "engagement_rate",
+        "Vistas": "viewCount",
+    }
+
+    # Creamos el selector
+    selected_column = render_metric_selector(
+        "Selecciona la variable requerida:", METRICS_MAP, key="h2_metrics"
+    )
+
     # Scatter plot interactivo nativo de Streamlit
     st.scatter_chart(
-        data=df, x="days_since_published", y="viewCount", color="video_type"
+        data=df, x="days_since_published", y=selected_column, color="video_type"
     )
 
 
 def render_hypothesis_3(df: pd.DataFrame):
     st.header("3. ¿Cuál es el punto óptimo de duración?")
 
-    # 1. Llamamos a nuestra lógica de análisis pura
+    # Llamamos a nuestra lógica de análisis pura
     summary_h3 = analyze_duration_segments(df)
 
-    # 2. Mostramos los datos
+    # Mostramos los datos
     st.dataframe(summary_h3, use_container_width=True)
 
-    # 3. Visualizamos
-    st.subheader("Promedio de vistas por segmento de duración")
-    st.bar_chart(data=summary_h3, x="duration_segment", y="mean_views")
+    # Creamos el diccionario de mapeo
+    METRICS_MAP = {
+        "Promedio Vistas": "mean_views",
+        "Mediana Vistas": "median_views",
+        "Número de vídeos (extra)": "video_count",
+    }
+
+    # Creamos el selector
+    selected_column = render_metric_selector(
+        "Selecciona la métrica de Vistas:", METRICS_MAP, key="h3_metric"
+    )
+
+    # Graficamos la barra con la metrica seleccionada
+    st.bar_chart(data=summary_h3, x="duration_segment", y=selected_column)
 
 
 @st.cache_data
