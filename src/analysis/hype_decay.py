@@ -17,11 +17,16 @@ def calculate_correlations(df: pd.DataFrame) -> pd.DataFrame:
         df["engagement_rate"], method="pearson"
     )
 
+    # Pearson entre antiguedad y vistas LOGARÍTMICAS
+    corr_log_views = df["days_since_published"].corr(
+        df["log_viewCount"], method="pearson"
+    )
+
     # Creamos un resumen limpio
     correlation_results = pd.DataFrame(
         {
-            "metric": ["viewCount", "engagement_rate"],
-            "pearson_correlation": [corr_views, corr_engagement],
+            "metric": ["viewCount", "engagement_rate", "log_viewCount"],
+            "pearson_correlation": [corr_views, corr_engagement, corr_log_views],
         }
     )
 

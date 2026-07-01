@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def calculate_engagement_rate(df: pd.DataFrame) -> pd.DataFrame:
@@ -55,5 +56,23 @@ def compute_days_since_published(df: pd.DataFrame) -> pd.DataFrame:
     # 2. Calculamos days_since_published
     min_date = df_clean["publishTime"].min()
     df_clean["days_since_published"] = (df_clean["publishTime"] - min_date).dt.days
+
+    return df_clean
+
+
+def add_log_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Agrega una transformación logarítmica a viewCount para normalizar la distribución.
+
+    Args:
+        df: Dataframe con la columna 'viewCount'.
+
+    Returns:
+        DataFrame con la columna 'log_viewCount' agregada.
+    """
+    df_clean = df.copy()
+
+    # log10(x + 1) es el estándar para manejar ceros
+    df_clean["log_viewCount"] = np.log10(df_clean["viewCount"] + 1)
 
     return df_clean
