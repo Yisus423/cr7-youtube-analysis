@@ -1,6 +1,7 @@
 import pandas as pd
 from src.analysis.shorts_vs_longs import analyze_engagement_by_type
 from src.analysis.hype_decay import calculate_correlations
+from src.analysis.sweet_spot import analyze_duration_segments
 from src.preprocessing import run_preprocessing_pipeline
 
 df = pd.read_csv("data/cristiano_youtube_stats.csv")
@@ -13,3 +14,6 @@ print(analyze_engagement_by_type(df))
 
 # Hypotesis 2
 print(calculate_correlations(df))
+
+# Hypotesis 3
+print(analyze_duration_segments(df))
