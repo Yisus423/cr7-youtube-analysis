@@ -3,6 +3,7 @@ import pandas as pd
 from src.preprocessing import run_preprocessing_pipeline
 from src.analysis.shorts_vs_longs import analyze_engagement_by_type
 from src.analysis.hype_decay import calculate_correlations
+from src.analysis.sweet_spot import analyze_duration_segments
 
 
 def render_hypothesis_1(df: pd.DataFrame):
@@ -51,16 +52,35 @@ def render_hypothesis_2(df: pd.DataFrame):
     )
 
 
+def render_hypothesis_3(df: pd.DataFrame):
+    st.header("3. ¿Cuál es el punto óptimo de duración?")
+
+    # 1. Llamamos a nuestra lógica de análisis pura
+    summary_h3 = analyze_duration_segments(df)
+
+    # 2. Mostramos los datos
+    st.dataframe(summary_h3, use_container_width=True)
+
+    # 3. Visualizamos
+    st.subheader("Promedio de vistas por segmento de duración")
+    st.bar_chart(data=summary_h3, x="duration_segment", y="mean_views")
+
+
+@st.cache_data
+def load_and_preprocess():
+    df = pd.read_csv("data/cristiano_youtube_stats.csv")
+    return run_preprocessing_pipeline(df)
+
+
 def main():
     st.set_page_config(page_title="CR7 YouTube Analysis", layout="wide")
     st.title("📊 Análisis de Rendimiento: Canal de Cristiano Ronaldo")
-    # 1. Carga y preprocesamiento (esto se ejecuta cada vez que se recarga la app)
-    # En un entorno profesional, aquí se usaría st.cache_data para no re-procesar todo
-    df = pd.read_csv("data/cristiano_youtube_stats.csv")
-    df = run_preprocessing_pipeline(df)
+    # 1. Carga y preprocesamiento (esto se ejecuta una vez y se guarda en cache para mayor eficiencia)
+    df = load_and_preprocess()
     # 2.Cargamos las hipothesis:
     render_hypothesis_1(df)
     render_hypothesis_2(df)
+    render_hypothesis_3(df)
 
 
 if __name__ == "__main__":
