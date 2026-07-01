@@ -1,0 +1,34 @@
+[theme]
+base = "dark"
+primaryColor = "#e6b450"
+backgroundColor = "#0a0e14"
+secondaryBackgroundColor = "#1f2430"
+textColor = "#b3b1ad"
+font = "sans serif"
+
+# 📊 Paleta Categórica (Para barras individuales, categorías como 'long' vs 'short')
+chartCategoricalColors = [
+    "#e6b450", # Oro (CR7 - Serie principal)
+    "#129153", # Verde Sporting (Shorts - Sus inicios explosivos)
+    "#ff3333", # Rojo (Ayu Alert - Alertas o decaimiento)
+    "#475266", # Gris desactivado (Neutrales)
+    "#b3b1ad"  # Gris claro (Texto)
+]
+
+# 📈 Paleta Secuencial (Para mapas de calor o gradientes de intensidad de vistas/engagement)
+chartSequentialColors = [
+    "#8c6213", # Oro Profundo / Sombra (Menor intensidad)
+    "#c6922d", # Oro Oscuro
+    "#e6b450", # Oro Base CR7
+    "#f0cb72", # Oro Claro
+    "#fce3a1"  # Oro Ultra Brillante (Máxima intensidad)
+]
+
+# 📉 Paleta Divergente (Para variables que van de un extremo negativo a positivo, como correlaciones)
+chartDivergingColors = [
+    "#ff3333", # Rojo Alerta (Correlación negativa extrema / Hype decay)
+    "#ff9999", # Rojo suave
+    "#1f2430", # Neutral (Fondo de la app)
+    "#a1e0ff", # Azul suave
+    "#59c2ff"  # Cian / Oro (Correlación positiva extrema)
+]
