@@ -112,8 +112,8 @@ def render_hypothesis_3(df: pd.DataFrame):
 
 @st.cache_data
 def load_and_preprocess():
-    df = pd.read_csv("data/cristiano_youtube_stats.csv")
-    return run_preprocessing_pipeline(df)
+    # Carga el parquet pre-procesado directamente
+    return pd.read_parquet("data/processed_data.parquet")
 
 
 def main():

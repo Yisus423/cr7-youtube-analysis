@@ -87,3 +87,20 @@ def add_log_features(df: pd.DataFrame) -> pd.DataFrame:
     df_clean["log_viewCount"] = np.log10(df_clean["viewCount"] + 1)
 
     return df_clean
+
+
+def main():
+    # 1. Cargar el dataset crudo
+    raw_df = pd.read_csv("data/cristiano_youtube_stats.csv")
+
+    # 2. Correr pipeline
+    processed_df = run_preprocessing_pipeline(raw_df)
+
+    # 3. Guardar como Parquet
+    output_path = "data/processed_data.parquet"
+    processed_df.to_parquet(output_path, index=False)
+    print(f"Dataset procesado y guardado en: {output_path}")
+
+
+if __name__ == "__main__":
+    main()
