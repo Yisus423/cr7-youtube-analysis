@@ -36,6 +36,7 @@ def test_calculate_correlations_perfect_negative():
         {
             "days_since_published": [0, 1, 2],
             "viewCount": [100, 50, 0],
+            "log_viewCount": [2.0, 1.0, 0.0],  # Valores logarítmicos decrecientes
             "engagement_rate": [0.3, 0.2, 0.1],
         }
     )
@@ -49,7 +50,11 @@ def test_calculate_correlations_perfect_negative():
     corr_eng = result[result["metric"] == "engagement_rate"][
         "pearson_correlation"
     ].iloc[0]
+    corr_logviews = result[result["metric"] == "log_viewCount"][
+        "pearson_correlation"
+    ].iloc[0]
 
     # Pearson de [100, 50, 0] vs [0, 1, 2] es -1.0
     assert corr_views == pytest.approx(-1.0)
     assert corr_eng == pytest.approx(-1.0)
+    assert corr_logviews == pytest.approx(-1.0)

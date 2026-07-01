@@ -1,5 +1,10 @@
 import pandas as pd
-from src.preprocessing import calculate_engagement_rate, compute_days_since_published
+from src.preprocessing import (
+    calculate_engagement_rate,
+    compute_days_since_published,
+    add_log_features,
+    run_preprocessing_pipeline,
+)
 
 
 def test_calculate_engagement_rate_behavior():
@@ -44,3 +49,37 @@ def test_compute_days_since_published():
     # 3. Assert
     # Esperamos que el primero sea 0, el segundo 1, el tercero 2
     assert result["days_since_published"].tolist() == [0, 1, 2]
+
+
+def test_add_log_features():
+    # Arrange
+    mock_data = pd.DataFrame(
+        {"viewCount": [0, 9, 99]}
+    )  # log1p(0)=0, log1p(9)=1, log1p(99)=2 (base 10)
+
+    # Act
+    result = add_log_features(mock_data)
+
+    # Assert: usamos np.log10(x + 1)
+    assert result.loc[0, "log_viewCount"] == 0.0
+    assert result.loc[1, "log_viewCount"] == 1.0
+    assert result.loc[2, "log_viewCount"] == 2.0
+
+
+def test_run_preprocessing_pipeline():
+    # Arrange: Datos que requieren limpieza y transformación
+    mock_data = pd.DataFrame(
+        {
+            "likeCount": [10],
+            "commentCount": [5],
+            "viewCount": [100],
+            "publishTime": ["2024-01-01"],
+        }
+    )
+
+    # Act: Corremos todo el orquestador
+    result = run_preprocessing_pipeline(mock_data)
+
+    # Assert: Verificamos que todas las columnas nuevas existan
+    expected_cols = {"engagement_rate", "days_since_published", "log_viewCount"}
+    assert expected_cols.issubset(result.columns)
