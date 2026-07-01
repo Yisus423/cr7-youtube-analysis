@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 from src.analysis.shorts_vs_longs import analyze_engagement_by_type
 from src.analysis.hype_decay import calculate_correlations
+from src.analysis.sweet_spot import analyze_duration_segments
 
 
 def test_analyze_engagement_by_type():
@@ -58,3 +59,37 @@ def test_calculate_correlations_perfect_negative():
     assert corr_views == pytest.approx(-1.0)
     assert corr_eng == pytest.approx(-1.0)
     assert corr_logviews == pytest.approx(-1.0)
+
+
+def test_analyze_duration_segments():
+    # 1. Arrange: Casos de borde (180 es el límite entre '0-3m' y '3-10m')
+    mock_data = pd.DataFrame(
+        {
+            "video_type": ["long", "long", "long", "short"],
+            "duration_seconds": [
+                100,
+                180,
+                181,
+                60,
+            ],  # 180 debe estar en '0-3m', 181 en '3-10m'
+            "viewCount": [1000, 2000, 3000, 5000],
+        }
+    )
+
+    # 2. Act
+    summary = analyze_duration_segments(mock_data)
+
+    # 3. Assert
+    # Buscamos los datos para cada segmento
+    segment_0_3 = summary[summary["duration_segment"] == "0-3m"].iloc[0]
+    segment_3_10 = summary[summary["duration_segment"] == "3-10m"].iloc[0]
+
+    # 100 y 180 deben promediar (1000 + 2000) / 2 = 1500
+    assert segment_0_3["mean_views"] == pytest.approx(1500)
+    assert segment_0_3["video_count"] == 2
+
+    # 181 debe ser el único en su grupo
+    assert segment_3_10["mean_views"] == pytest.approx(3000)
+    assert segment_3_10["video_count"] == 1
+
+    assert len(summary) == 2  # Solo deberían quedar dos categorías
