@@ -4,11 +4,10 @@ from src.analysis.hype_decay import calculate_correlations
 from src.analysis.sweet_spot import analyze_duration_segments
 from src.preprocessing import run_preprocessing_pipeline
 
+# Cargamos el dataset preprocesado
 df = pd.read_parquet("data/processed_data.parquet")
 df.info()
 
-# Realizemos el preprocesamiento (limpieza y añadido de columnas)
-df = run_preprocessing_pipeline(df)
 # Hypotesis 1
 print(analyze_engagement_by_type(df))
 
