@@ -1,5 +1,5 @@
 import pandas as pd
-from src.preprocessing import (
+from scripts.preprocessing import (
     calculate_engagement_rate,
     compute_days_since_published,
     add_log_features,
