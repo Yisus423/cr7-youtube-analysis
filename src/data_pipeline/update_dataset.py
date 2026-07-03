@@ -1,7 +1,7 @@
 import os
 import sys
 from kaggle.api.kaggle_api_extended import KaggleApi
-from scripts.preprocessing import run_preprocessing_pipeline
+from .preprocessing import run_preprocessing_pipeline
 import pandas as pd
 import hashlib
 

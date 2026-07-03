@@ -1,14 +1,13 @@
 import sys
 from unittest.mock import MagicMock
 
-# Mock dependencies before importing scripts.update_dataset
+# Mock dependencies before importing update_dataset
 sys.modules["kaggle"] = MagicMock()
 sys.modules["kaggle.api"] = MagicMock()
 sys.modules["kaggle.api.kaggle_api_extended"] = MagicMock()
-sys.modules["pandas"] = MagicMock()
-sys.modules["scripts.preprocessing"] = MagicMock()
+sys.modules["src.data_pipeline.preprocessing"] = MagicMock()
 
-from scripts.update_dataset import get_file_hash, should_update
+from src.data_pipeline.update_dataset import get_file_hash, should_update  # noqa: E402
 
 # Mock object for remote file metadata
 class MockMetadata:
